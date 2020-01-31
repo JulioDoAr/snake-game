@@ -8,20 +8,19 @@ class Application {
     private context: CanvasRenderingContext2D;
 
     private gs: number = 3;
-    private tc: number = 15;
+    private boardSize: number = 15;
     private xv: number = 0;
     private yv: number = 0;
-    private trail: Point[] = [];
-    private tail: number = 5;
-    private headPosition: Point;
+    private snake: Snake;
     private apple: Point;
+    private direction: Direction = Direction.None;
 
     constructor(document: Document) {
         this.canvas = <HTMLCanvasElement>document.getElementById("canvas");
         this.context = <CanvasRenderingContext2D>this.canvas.getContext("2d");
 
         this.apple = new Point(15,15);
-        this.headPosition = new Point(10,10);
+        this.snake = new Snake();
 
         document.addEventListener("keydown", this.keyPush.bind(this));
         setInterval(this.game.bind(this) , 1000 / 15);
@@ -29,20 +28,7 @@ class Application {
 
     private game(): void {
 
-        this.headPosition.x += this.xv;
-        this.headPosition.y += this.yv;
-        if (this.headPosition.x < 0) {
-            this.headPosition.x = this.tc - 1;
-        }
-        if (this.headPosition.x > this.tc - 1) {
-            this.headPosition.x = 0;
-        }
-        if (this.headPosition.y < 0) {
-            this.headPosition.y = this.tc - 1;
-        }
-        if (this.headPosition.y > this.tc - 1) {
-            this.headPosition.y = 0;
-        }
+        this.snake.move(this.direction, this.boardSize);
         this.repaintCanvas();
 
         this.repaintSnake();
@@ -57,48 +43,61 @@ class Application {
 
     private repaintSnake() {
         this.context.fillStyle = Application.COLOR_SNAKE;
-        for (var i = 0; i < this.trail.length; i++) {
-            this.context.fillRect(this.trail[i].x * this.gs, this.trail[i].y * this.gs, this.gs - 2, this.gs - 2);
-            if (this.trail[i].x == this.headPosition.x && this.trail[i].y == this.headPosition.y) {
-                this.tail = 5;
+        for (var i = 0; i < this.snake.trail.length; i++) {
+            this.context.fillRect(this.snake.trail[i].x * this.gs, this.snake.trail[i].y * this.gs, this.gs - 2, this.gs - 2);
+            if (this.snake.trail[i].equals(this.snake.headPosition)) {
+                this.snake.tail = 5;
             }
         }
-        this.trail.push(this.headPosition);
-        while (this.trail.length > this.tail) {
-            this.trail.shift();
+        this.snake.trail.push(this.snake.headPosition);
+        while (this.snake.trail.length > this.snake.tail) {
+            this.snake.trail.shift();
         }
     }
 
     private checkApple(){
-        if (this.headPosition.equals(this.apple)) {
-            this.tail++;
-            this.apple.x = Math.floor(Math.random() * this.tc);
-            this.apple.y = Math.floor(Math.random() * this.tc);
+        if (this.snake.headPosition.equals(this.apple)) {
+            this.snake.grow();
+            this.generateRandomApple();
         }
         this.context.fillStyle = Application.COLOR_APPLE;
         this.context.fillRect(this.apple.x * this.gs, this.apple.y * this.gs, this.gs - 2, this.gs - 2);
     }
 
-    private keyPush(event: KeyboardEvent): void {
-        
-        console.log(event);
-        console.log(this.context);
-        switch (event.keyCode) {
-            case 37:
-                this.xv = -1; this.yv = 0;
-                break;
-            case 38:
-                this.xv = 0; this.yv = -1;
-                break;
-            case 39:
-                this.xv = 1; this.yv = 0;
-                break;
-            case 40:
-                this.xv = 0; this.yv = 1;
-                break;
-        }
+    private generateRandomApple(){
+        this.apple.x = Math.floor(Math.random() * this.boardSize);
+        this.apple.y = Math.floor(Math.random() * this.boardSize);
     }
 
+    private keyPush(event: KeyboardEvent): void {
+        
+        this.direction = event.keyCode;
+        // console.log(event);
+        // console.log(this.context);
+        // switch (event.keyCode) {
+        //     case 37: LEFT
+        //         this.xv = -1; this.yv = 0;
+        //         break;
+        //     case 38: UP
+        //         this.xv = 0; this.yv = -1;
+        //         break;
+        //     case 39: RIGHT
+        //         this.xv = 1; this.yv = 0;
+        //         break;
+        //     case 40: DOWN
+        //         this.xv = 0; this.yv = 1;
+        //         break;
+        // }
+    }
+
+}
+
+enum Direction {
+    None=0,
+    N=38,
+    S=40,
+    E=39,
+    W=37
 }
 
 class Point {
@@ -121,10 +120,45 @@ class Point {
 
 class Snake {
     
-    private trail: Point[] = [];
-    private tail: number = 5;
-    private headPosition: Point = new Point(10,10);
+    public trail: Point[] = [];
+    public tail: number = 5;
+    public headPosition: Point = new Point(10,10);
 
+    constructor(){}
+
+    public grow(): void{
+        this.tail++;
+    }
+
+    public move(direction: Direction, boardSize: number): void {
+        switch (direction) {
+            case Direction.N:
+            this.headPosition.x++;
+            break;
+            case Direction.S:
+            this.headPosition.x--;
+            break;
+            case Direction.E:
+            this.headPosition.y++;
+            break;
+            case Direction.W:
+            this.headPosition.y--;
+            break;
+        }
+
+        if (this.headPosition.x < 0) {
+            this.headPosition.x = boardSize - 1;
+        }
+        if (this.headPosition.x > boardSize - 1) {
+            this.headPosition.x = 0;
+        }
+        if (this.headPosition.y < 0) {
+            this.headPosition.y = boardSize - 1;
+        }
+        if (this.headPosition.y > boardSize - 1) {
+            this.headPosition.y = 0;
+        }
+    }
 }
 
 var app = new Application(document);
