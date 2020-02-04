@@ -2,15 +2,24 @@
   "name": "snake",
   "version": "1.0.0",
   "description": "Snake game",
-  "main": "bin/Application.js",
+  "main": "bin/Electron.js",
   "scripts": {
-    "compile": "tsc",
-    "develop": "tsc -w",
+    "prebuild": "del-cli ./bin",
+    "build": "tsc",
+    "postbuild": "cpy '**/*.html' '../bin/' --cwd=src --parents",
     "start": "electron ."
   },
+  "keywords": [
+    "start",
+    "build"
+  ],
   "author": "Julio",
   "license": "ISC",
-  "dependencies": {
-    "typescript": "^3.7.5"
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^3.7.5",
+    "electron": "^8.0.0",
+    "cpy-cli": "^3.0.0",
+    "del-cli": "^3.0.0"
   }
 }
