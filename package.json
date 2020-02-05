@@ -6,9 +6,9 @@
   "scripts": {
     "prebuild": "del-cli ./bin",
     "build": "tsc",
-    "postbuild": "cpy '**/*.html' '../bin/' --cwd=src --parents",
+    "postbuild": "cpy **/*.html ../bin/ --cwd=src --parents",
     "start": "electron ."
-  },
+  },  
   "keywords": [
     "start",
     "build"
