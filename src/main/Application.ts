@@ -84,4 +84,5 @@ class Application {
   
 }
 
+console.log(document);
 var app = new Application(document);

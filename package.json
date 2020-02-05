@@ -2,7 +2,7 @@
   "name": "snake",
   "version": "1.0.0",
   "description": "Snake game",
-  "main": "bin/Electron.js",
+  "main": "bin/main/Electron.js",
   "scripts": {
     "prebuild": "del-cli ./bin",
     "build": "tsc",
