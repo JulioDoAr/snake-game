@@ -17,6 +17,7 @@ class Application {
   private direction: Direction = Direction.None;
 
   constructor(document: Document) {
+    console.log("Application created!");
     this.canvas = <HTMLCanvasElement>document.getElementById('canvas');
     this.context = <CanvasRenderingContext2D>this.canvas.getContext('2d');
 
@@ -84,5 +85,5 @@ class Application {
   
 }
 
-console.log(document);
-var app = new Application(document);
+console.log("Application.js loaded!");
+new Application(document);

@@ -3,15 +3,19 @@ const { app, BrowserWindow } = require('electron')
 function createWindow() {
   // Create the browser window.
   let win = new BrowserWindow({
-    width: 400,
-    height: 400,
+    width: 450,
+    height: 450,
     webPreferences: {
       nodeIntegration: true
     }
   })
 
+  // win.loadURL('https://github.com');
   // and load the index.html of the app.
-  win.loadFile('../resources/index.html')
+  // win.loadURL('file://${__dirname}/resources/index.html')
+  // win.loadFile('resources/index.html')
+  win.loadFile(__dirname + '/index.html');
+  win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow)
