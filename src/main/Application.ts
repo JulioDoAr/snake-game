@@ -1,3 +1,4 @@
+
 import {Snake} from './entities/Snake';
 import {Point} from './common/Point';
 import {Direction} from './common/Direction';
