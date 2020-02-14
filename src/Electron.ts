@@ -7,7 +7,8 @@ function createWindow() {
     height: 450,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    
   })
 
   // win.loadURL('https://github.com');
