@@ -1,3 +1,9 @@
 node_modules
 bin
 package-lock.json
+
+# Eclipse
+.project
+.jsdtscope
+.settings
+tsconfig.tsbuildinfo
